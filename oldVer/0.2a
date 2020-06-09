@@ -1,0 +1,62 @@
+#!/bin/bash
+
+#0.2a
+
+mesi[1]="january"
+mesi[2]="february"
+mesi[3]="march"
+mesi[4]="april"
+mesi[5]="may"
+mesi[6]="june"
+mesi[7]="july"
+mesi[8]="august"
+mesi[9]="september"
+mesi[10]="october"
+mesi[11]="november"
+mesi[12]="december"
+
+move () {
+	cd /home/wloda/Scrivania/FINE/$este/$anno
+	if [[ -d $mesi[$mese] ]]; then
+		echo ""
+	else
+		mkdir ${mesi[$mese]}
+	fi
+	mv /home/wloda/Scrivania/START/$nomeFile /home/wloda/Scrivania/FINE/$este/$anno/${mesi[mese]}
+}
+
+NRFile=$(ls /home/wloda/Scrivania/START | wc -l)
+while [[ $NRFile > 0 ]]; do
+	cd /home/wloda/Scrivania/START
+	clear
+	echo $NRFile
+
+	nomeFile=$(ls -1 /home/wloda/Scrivania/START | tail -$NRFile | head -n1 | awk {'print $1'})
+	data=$(stat /home/wloda/Scrivania/START/$nomeFile | tail -3 | head -n1 | awk {'print $3'})
+	este=${nomeFile##*.}
+	anno=${data:0:4}
+	mese=${data:5:2}
+	
+	if [[ $mese <10 ]]; then
+		mese=${mese:1:1}
+	fi
+
+	cd /home/wloda/Scrivania/FINE
+
+	if [[ -d $este ]]; then
+		cd $este
+	else
+		mkdir $este
+		cd $este
+	fi
+
+	if [[ -d $anno ]]; then
+		move
+	else
+		mkdir $anno
+		move
+	fi
+	let NRFile=NRFile-1
+done
+
+find /home/wloda/Scrivania/dirTestFine -type d -empty -delete 
