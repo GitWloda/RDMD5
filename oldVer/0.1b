@@ -1,0 +1,90 @@
+#!/bin/bash
+
+#0.1b
+
+mesi[1]="january"
+mesi[2]="february"
+mesi[3]="march"
+mesi[4]="april"
+mesi[5]="may"
+mesi[6]="june"
+mesi[7]="july"
+mesi[8]="august"
+mesi[9]="september"
+mesi[10]="october"
+mesi[11]="november"
+mesi[12]="december"
+
+spost () {
+	case $mese in
+		01 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[1]}
+			;;
+		02 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[2]}
+			;;
+		03 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[3]}
+			;;
+		04 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[4]}
+			;;
+		05 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[5]}
+			;;
+		06 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[6]}
+			;;
+		07 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[7]}
+			;;
+		08 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[8]}
+			;;
+		09 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[9]}
+			;;
+		10 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[10]}
+			;;
+		11 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[11]}
+			;;
+		12 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[12]}
+			;;
+	esac
+}
+
+numeFile=$(ls /home/wloda/Scrivania/dirTestStart | wc -l)
+repeat=$numeFile
+echo $numeFile
+for (( i = 0; i < $repeat ; i++ )); do
+	cd /home/wloda/Scrivania/dirTestStart
+
+	nomeFile=$(ls -1 /home/wloda/Scrivania/dirTestStart | tail -$numeFile | head -n1 | awk {'print $1'})
+	dataCrea=$(stat /home/wloda/Scrivania/dirTestStart/$nomeFile | tail -3 | head -n1 | awk {'print $3'})
+	data=${dataCrea:0:4}
+	mese=${dataCrea:5:2}
+
+	cd /home/wloda/Scrivania/dirTestFine
+	if [ -d $data ]; then
+		cd /home/wloda/Scrivania/dirTestFine/$data
+		if [ -d ${mesi[mese]} ]; then
+			spost
+		else
+			mkdir ${mesi[mese]}
+			cd /home/wloda/Scrivania/dirTestFine/$data/${mesi[mese]}
+			spost
+		fi
+	else
+		mkdir $data
+		cd /home/wloda/Scrivania/dirTestFine/$data
+		mkdir ${mesi[mese]}
+		cd /home/wloda/Scrivania/dirTestFine/$data/${mesi[mese]}
+		spost
+	fi
+
+	let numeFile=$numeFile-1
+	echo $numeFile
+done
