@@ -15,6 +15,8 @@ mesi[10]="october"
 mesi[11]="november"
 mesi[12]="december"
 
+# Condition --> -d $(eval "echo $dir")
+
 until [[ -d $START ]]; do
 	echo "Cartella di inizio: (inserire il percorso assoluto senza spazi)"
 	read START
