@@ -1,0 +1,111 @@
+#!/bin/bash
+
+#0.0a
+
+cd /home/wloda/Scrivania/dirTestStart
+
+mesi[0]="january"
+mesi[1]="february"
+mesi[2]="march"
+mesi[3]="april"
+mesi[4]="may"
+mesi[5]="june"
+mesi[6]="july"
+mesi[7]="august"
+mesi[8]="september"
+mesi[9]="october"
+mesi[10]="november"
+mesi[11]="december"
+
+minAnno=3020
+maxAnno=0
+
+numeFile=$(ls /home/wloda/Scrivania/dirTestStart | wc -l)
+repeat=$numeFile
+echo $numeFile
+for (( i = 0; i < $repeat ; i++ )); do
+	nomeFile=$(ls -1 /home/wloda/Scrivania/dirTestStart | tail -$numeFile | head -n1 | awk {'print $1'})
+	dataCrea=$(stat /home/wloda/Scrivania/dirTestStart/$nomeFile | tail -3 | head -n1 | awk {'print $3'})
+	data=${dataCrea:0:4}
+
+	if [[ $data -gt $maxAnno ]]; then
+		maxAnno=$data
+	fi
+
+	if [[ $data -lt $minAnno ]]; then
+		minAnno=$data
+	fi
+
+
+
+	let numeFile=$numeFile-1
+	echo $numeFile
+done
+
+echo $minAnno && echo $maxAnno
+
+
+for (( annoCor = minAnno; annoCor < maxAnno+1; annoCor++ )); do
+	anno=$annoCor
+
+	mkdir /home/wloda/Scrivania/dirTestFine/$anno
+	cd /home/wloda/Scrivania/dirTestFine/$anno
+	for (( meseCor = 0; meseCor < 11; meseCor++ )); do
+		mkdir /home/wloda/Scrivania/dirTestFine/$anno/${mesi[meseCor]}
+	done
+	cd /home/wloda/Scrivania/dirTestStart
+done
+
+
+numeFile=$(ls /home/wloda/Scrivania/dirTestStart | wc -l)
+repeat=$numeFile
+
+for (( i = 0; i < $repeat ; i++ )); do
+	nomeFile=$(ls -1 /home/wloda/Scrivania/dirTestStart/ | tail -$numeFile | head -n1 | awk {'print $1'})
+	dataCrea=$(stat /home/wloda/Scrivania/dirTestStart/$nomeFile | tail -3 | head -n1 | awk {'print $3'})
+	data=${dataCrea:0:4}
+	mese=${dataCrea:5:2}
+
+	case $mese in
+		01 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[0]}
+			;;
+		02 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[1]}
+			;;
+		03 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[2]}
+			;;
+		04 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[3]}
+			;;
+		05 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[4]}
+			;;
+		06 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[5]}
+			;;
+		07 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[6]}
+			;;
+		08 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[7]}
+			;;
+		09 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[8]}
+			;;
+		10 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[9]}
+			;;
+		11 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[10]}
+			;;
+		12 )
+			mv /home/wloda/Scrivania/dirTestStart/$nomeFile /home/wloda/Scrivania/dirTestFine/$data/${mesi[11]}
+			;;
+	esac
+	let numeFile=$numeFile-1
+	echo $numeFile
+done
+
+find /home/wloda/Scrivania/dirTestFine -type d -empty -delete 
