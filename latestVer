@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#0.2e
-#this new update thanks to the contribution of x7429
+#0.3a
 
 mesi[1]="january"
 mesi[2]="february"
@@ -15,6 +14,7 @@ mesi[9]="september"
 mesi[10]="october"
 mesi[11]="november"
 mesi[12]="december"
+ini=1
 
 until [[ -d $(eval "echo $START") ]]; do
 	echo "Cartella di inizio: (inserire il percorso assoluto senza spazi)"
@@ -30,6 +30,8 @@ until [[ -d $(eval "echo $FINE") ]]; do
 	read FINE
 	if [[ -d $(eval "echo $FINE") ]]; then
 		echo "OK"
+		cd $(eval "echo $FINE")
+		mkdir -v duplicated
 	else
 		echo "DIR NON ESISTENTE"
 	fi
@@ -46,18 +48,35 @@ move () {
 	mv -v $(eval "echo $START")/$nomeFile $(eval "echo $(eval "echo $FINE")")/$este/$anno/${mesi[mese]}
 }
 
+dup () {
+	for (( i = $ini; i < $NRFile ; i++ )); do
+		echo -ne "\e[96mcontrollo duplici $i-$NRFile\033[0K\r"
+		nomeFile2=$(ls -1 $(eval "echo $START") | tail -$i | head -n1 | awk {'print $1'})
+		codMD5=$(md5sum $nomeFile | awk {'print $1'} )
+		codMD5tmp=$(md5sum $nomeFile2 | awk {'print $1'} )
+		if [[ "$codMD5" == "$codMD5tmp" ]]; then
+			echo "duplicated"
+			mv -v $(eval "echo $START")/$nomeFile2 $(eval "echo $FINE")/duplicated
+			let NRFile=NRFile-1
+			break
+		fi
+	done
+
+}
+
 NRFile=$(ls $(eval "echo $START") | wc -l)
 while [[ $NRFile > 0 ]]; do
 	cd $(eval "echo $START")
 	#clear
-	echo $NRFile
+	echo -ne "\e[96m$NRFile\033[0K\r"
 
 	nomeFile=$(ls -1 $(eval "echo $START") | tail -$NRFile | head -n1 | awk {'print $1'})
-	data=$(stat $(eval "echo $START")/$nomeFile | tail -3 | head -n1 | awk {'print $3'})
+	data=$(stat $(eval "echo $START")/$nomeFile | tail -3 | head -n1 | awk {'print $2'})
 	este=${nomeFile##*.}
 	anno=${data:0:4}
 	mese=${data:5:2}
-	
+	dup
+
 	if [[ $mese <10 ]]; then
 		mese=${mese:1:1}
 	fi
@@ -81,3 +100,4 @@ while [[ $NRFile > 0 ]]; do
 done
 
 find $(eval "echo $FINE") -type d -empty -delete
+find $(eval "echo $START") -type d -empty -delete
