@@ -1,0 +1,170 @@
+#!/bin/bash
+
+#0.3b
+
+mesi[1]="january"
+mesi[2]="february"
+mesi[3]="march"
+mesi[4]="april"
+mesi[5]="may"
+mesi[6]="june"
+mesi[7]="july"
+mesi[8]="august"
+mesi[9]="september"
+mesi[10]="october"
+mesi[11]="november"
+mesi[12]="december"
+ini=1
+
+input=$1
+
+nomeProg=$0
+pwdProg="$(pwd)"
+posProg="$(pwd)${nomeProg:1}"
+case $input in
+	"-U" | "--update" )
+		ping -c 1 google.com && internetPing="true"
+		if [[ "$internetPing" == "true" ]]; then
+			git --version ||  notInstall="true"
+			if [[ "$notInstall" == "true" ]]; then
+				declare -A osInfo;
+				osInfo[/etc/redhat-release]=yum
+				osInfo[/etc/arch-release]=pacman
+				osInfo[/etc/gentoo-release]=emerge
+				osInfo[/etc/SuSE-release]=zypp
+				osInfo[/etc/debian_version]=apt-get
+	
+				case "${!osInfo[@]}" in
+					"yum" )
+						sudo yum install git ;;
+					"pacman" )
+						sudo pacman -S git ;;
+					"emerge" )
+						sudo emerge --ask dev-vsc/git ;;
+					"zypp" )
+						sudo zypper in git ;;
+					"apt-get" )
+						sudo apt-get isntall git ;;
+				esac
+			fi
+			rm -rf newASFwlodaProdTMP
+			mkdir newASFwlodaProdTMP
+			cd  newASFwlodaProdTMP
+			git clone https://github.com/GitWloda/AutoSortFile.git
+			echo " "
+			cd AutoSortFile
+			rm -rf $pwdProg/AutoSortFileProg
+			mv latestVer $pwdProg/AutoSortFileProg  
+			chmod 777 $pwdProg/AutoSortFileProg 
+			cd ..
+			rm -rf newASFwlodaProdTMP
+			rm -rfv $posProg
+			clear
+			echo "aggiornamento eseguito"
+			exit	
+		else
+			clear
+			echo "NO NETWORK CONNECTION... PLEASY TRY AGAIN"
+			exit
+		fi
+	;;
+	"-S" | "--sort" )
+		echo "starting..."
+	;;
+	"-H" | "--help" )
+		echo "-S or --sort for start sort program"
+		echo "-U or --update for update"
+		echo "-H or --help for this list"
+		exit
+	;;
+	* )
+		echo "opzione non valida"
+		echo "usa \"-h\" o \"--help\" per vedere tutte le opzioni"
+		exit
+	;;
+esac
+
+until [[ -d $(eval "echo $START") ]]; do
+	echo "Cartella di inizio: (inserire il percorso assoluto senza spazi)"
+	read START
+	if [[ -d $(eval "echo $START") ]]; then
+		echo "OK"
+	else
+		echo "DIR NON ESISTENTE"
+	fi
+done
+until [[ -d $(eval "echo $FINE") ]]; do
+	echo "Cartella di fine: (inserire il percorso assoluto senza spazi)"
+	read FINE
+	if [[ -d $(eval "echo $FINE") ]]; then
+		echo "OK"
+		cd $(eval "echo $FINE")
+		mkdir -v duplicated
+	else
+		echo "DIR NON ESISTENTE"
+	fi
+done
+
+move () {
+	cd $(eval "echo $FINE")/$este/$anno
+	if [[ -d ${mesi[$mese]} ]]; then
+		pwd
+	else
+		mkdir -v ${mesi[$mese]}
+		pwd
+	fi
+	mv -v $(eval "echo $START")/$nomeFile $(eval "echo $(eval "echo $FINE")")/$este/$anno/${mesi[mese]}
+}
+
+dup () {
+	for (( i = $ini; i < $NRFile ; i++ )); do
+		echo -ne "\e[96mcontrollo duplici $i-$NRFile\033[0K\r"
+		nomeFile2=$(ls -1 $(eval "echo $START") | tail -$i | head -n1 | awk {'print $1'})
+		codMD5=$(md5sum $nomeFile | awk {'print $1'} )
+		codMD5tmp=$(md5sum $nomeFile2 | awk {'print $1'} )
+		if [[ "$codMD5" == "$codMD5tmp" ]]; then
+			echo "duplicated"
+			mv -v $(eval "echo $START")/$nomeFile2 $(eval "echo $FINE")/duplicated
+			let NRFile=NRFile-1
+			break
+		fi
+	done
+
+}
+
+NRFile=$(ls $(eval "echo $START") | wc -l)
+while [[ $NRFile > 0 ]]; do
+	cd $(eval "echo $START")
+	#clear
+	echo -ne "\e[96m$NRFile\033[0K\r"
+
+	nomeFile=$(ls -1 $(eval "echo $START") | tail -$NRFile | head -n1 | awk {'print $1'})
+	data=$(stat $(eval "echo $START")/$nomeFile | tail -3 | head -n1 | awk {'print $2'})
+	este=${nomeFile##*.}
+	anno=${data:0:4}
+	mese=${data:5:2}
+	dup
+
+	if [[ $mese <10 ]]; then
+		mese=${mese:1:1}
+	fi
+
+	cd $(eval "echo $FINE")
+
+	if [[ -d $este ]]; then
+		cd $este
+	else
+		mkdir -v $este
+		cd $este
+	fi
+
+	if [[ -d $anno ]]; then
+		move
+	else
+		mkdir -v $anno
+		move
+	fi
+	let NRFile=NRFile-1
+done
+
+find $(eval "echo $FINE") -type d -empty -delete
