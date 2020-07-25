@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#0.3a
+#0.3b
 
 mesi[1]="january"
 mesi[2]="february"
@@ -15,6 +15,74 @@ mesi[10]="october"
 mesi[11]="november"
 mesi[12]="december"
 ini=1
+
+input=$1
+
+nomeProg=$0
+pwdProg="$(pwd)"
+posProg="$(pwd)${nomeProg:1}"
+case $input in
+	"-U" | "--update" )
+		ping -c 1 google.com && internetPing="true"
+		if [[ "$internetPing" == "true" ]]; then
+			git --version ||  notInstall="true"
+			if [[ "$notInstall" == "true" ]]; then
+				declare -A osInfo;
+				osInfo[/etc/redhat-release]=yum
+				osInfo[/etc/arch-release]=pacman
+				osInfo[/etc/gentoo-release]=emerge
+				osInfo[/etc/SuSE-release]=zypp
+				osInfo[/etc/debian_version]=apt-get
+	
+				case "${!osInfo[@]}" in
+					"yum" )
+						sudo yum install git ;;
+					"pacman" )
+						sudo pacman -S git ;;
+					"emerge" )
+						sudo emerge --ask dev-vsc/git ;;
+					"zypp" )
+						sudo zypper in git ;;
+					"apt-get" )
+						sudo apt-get isntall git ;;
+				esac
+			fi
+			rm -rf newASFwlodaProdTMP
+			mkdir newASFwlodaProdTMP
+			cd  newASFwlodaProdTMP
+			git clone https://github.com/GitWloda/AutoSortFile.git
+			echo " "
+			cd AutoSortFile
+			rm -rf $pwdProg/AutoSortFileProg
+			mv latestVer $pwdProg/AutoSortFileProg  
+			chmod 777 $pwdProg/AutoSortFileProg 
+			cd ..
+			rm -rf newASFwlodaProdTMP
+			rm -rfv $posProg
+			clear
+			echo "aggiornamento eseguito"
+			exit	
+		else
+			clear
+			echo "NO NETWORK CONNECTION... PLEASY TRY AGAIN"
+			exit
+		fi
+	;;
+	"-S" | "--sort" )
+		echo "starting..."
+	;;
+	"-H" | "--help" )
+		echo "-S or --sort for start sort program"
+		echo "-U or --update for update"
+		echo "-H or --help for this list"
+		exit
+	;;
+	* )
+		echo "opzione non valida"
+		echo "usa \"-h\" o \"--help\" per vedere tutte le opzioni"
+		exit
+	;;
+esac
 
 until [[ -d $(eval "echo $START") ]]; do
 	echo "Cartella di inizio: (inserire il percorso assoluto senza spazi)"
@@ -100,4 +168,3 @@ while [[ $NRFile > 0 ]]; do
 done
 
 find $(eval "echo $FINE") -type d -empty -delete
-find $(eval "echo $START") -type d -empty -delete
