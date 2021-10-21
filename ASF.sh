@@ -39,7 +39,7 @@ case $1 in
 				esac
 			fi
 			mkdir ~/.ASFinstall
-			cd ~/.ASFinstallz
+			cd ~/.ASFinstall
 			git clone https://github.com/GitWloda/AutoSortFile.git
 			cd AutoSortFile
 			chmod 777 remASF.sh
