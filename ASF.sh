@@ -44,7 +44,7 @@ case $1 in
 			cd AutoSortFile
 			chmod 777 remASF.sh
 			echo "aggiornamento eseguito"	
-			./remASF.sh &
+			sudo ./remASF.sh &
 			exit
 		else
 			clear
