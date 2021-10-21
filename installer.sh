@@ -1,4 +1,4 @@
 #!/bin/bash
 
 mv ./ASF.sh /usr/bin/
-rm -rf . &
+rm -rf ~/.ASFinstall &
