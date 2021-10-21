@@ -38,8 +38,8 @@ case $1 in
 					;;
 				esac
 			fi
-			mkdir ~/.ASFinstal
-			cd ~/.ASFinstal
+			mkdir ~/.ASFinstall
+			cd ~/.ASFinstall
 			git clone https://github.com/GitWloda/AutoSortFile.git
 			cd AutoSortFile
 			chmod 777 remASF.sh
