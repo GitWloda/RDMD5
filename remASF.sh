@@ -2,4 +2,4 @@
 
 #0.3b
 
-rm ./ASF2.sh
+rm /usr/bin/ASF.sh
