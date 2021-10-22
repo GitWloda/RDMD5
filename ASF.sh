@@ -42,7 +42,7 @@ case $1 in
 			cd ~/.ASFinstall
 			git clone https://github.com/GitWloda/AutoSortFile.git
 			cd AutoSortFile
-			chmod 777 remASF.sh
+			chmod 777 installer.sh
 			echo "aggiornamento eseguito"	
 			./installer.sh &
 			exit
