@@ -63,7 +63,7 @@ case $1 in
 	;;
 	* )
 		echo "opzione non valida"
-		echo "usa \"-h\" o \"--help\" per vedere tutte le opzioni"
+		echo "usa \"-H\" o \"--help\" per vedere tutte le opzioni"
 		exit
 	;;
 esac
