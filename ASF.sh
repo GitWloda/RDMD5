@@ -1,19 +1,8 @@
 #!/bin/bash
 
-#1.0
+#1.0a
+
 if [[ $(eval "whoami") == "root" ]]; then
-mesi[1]="january"
-mesi[2]="february"
-mesi[3]="march"
-mesi[4]="april"
-mesi[5]="may"
-mesi[6]="june"
-mesi[7]="july"
-mesi[8]="august"
-mesi[9]="september"
-mesi[10]="october"
-mesi[11]="november"
-mesi[12]="december"
 
 case $1 in
 	"-U" | "--update" )
@@ -54,10 +43,16 @@ case $1 in
 	;;
 	"-S" | "--sort" )
 	;;
+	"-R" | "--remove" )
+		rm /usr/bin/ASF.sh &
+	;;
+	"-V" | "--version" )
+	;;
 	"-H" | "--help" )
 		echo "-S or --sort for sort files"
 		echo "-U or --update for update"
 		echo "-R or --remove for uninstall"
+		echo "-V or --remove for see the actual version"
 		echo "-H or --help for the help list"
 		exit
 	;;
