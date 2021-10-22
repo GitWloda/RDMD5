@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #1.0
-
+if [[ $(eval "whoami") == "root" ]]; then
 mesi[1]="january"
 mesi[2]="february"
 mesi[3]="march"
@@ -62,3 +62,6 @@ case $1 in
 		exit
 	;;
 esac
+else 
+	echo "please use sudo"
+fi
