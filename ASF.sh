@@ -55,6 +55,11 @@ case $1 in
 	"-S" | "--sort" )
 	;;
 	"-H" | "--help" )
+		echo "-S or --sort for sort files"
+		echo "-U or --update for update"
+		echo "-R or --remove for uninstall"
+		echo "-H or --help for the help list"
+		exit
 	;;
 	* )
 		echo "opzione non valida"
