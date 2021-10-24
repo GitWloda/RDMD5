@@ -21,15 +21,14 @@ prog(){
 	NRFile=$(ls $(eval "echo $dirfrom") | wc -l)
 	echo $dirfrom
 	mysql --user=root -se "create database if not exists ASF else drop database ASF;
-		create database if not exists ASF;"
+		create database if not exists ASF;
+		create table ASFtable (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, name varchar(128), date DATE);"
 	while [[ $NRFile > 0 ]]; do
 		cd $(eval "echo $dirfrom")
 		echo -ne "\e[96m$NRFile\033[0K\r"
 		nomeFile=$(ls -1 $(eval "echo $dirfrom") | tail -$NRFile | head -n1)
 		data=$(stat $(eval "echo $dirfrom")/$nomeFile | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
 		mysql --user=root -se "use ASF;
-		create table ASFtable
-		(id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, name varchar(128), date DATE);
 		insert into ASFtable (name, date) values ('$nomeFile','$data');"
 		let NRFile=NRFile-1
 	done
