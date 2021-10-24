@@ -10,7 +10,7 @@ if [[ $(eval "whoami") == "root" ]]; then
 
 prog(){
 	until [[ -d $(eval "echo $dirfrom") ]]; do
-		echo "Cartella da controllare: (inserire il percorso assoluto senza spazi)"
+		echo "Cartella da controllare"
 		read dirfrom
 		if [[ -d $(eval "echo $dirfrom") ]]; then
 			echo "OK"
@@ -25,10 +25,15 @@ prog(){
 		echo -ne "\e[96m$NRFile\033[0K\r"
 		nomeFile=$(ls -1 $(eval "echo $dirfrom") | tail -$NRFile | head -n1)
 		data=$(stat $(eval "echo $dirfrom")/$nomeFile | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
-		echo $nomeFile
-		echo $data
+		mysql --user=root -se "create database if not exists ASF;
+		use ASF;
+		create table if not exists ASFtable
+		(id INT(6) UNSIGNED AUTO_INCREMENT P    RIMARY KEY,
+		name varchar, date DATE);
+		insert into ASFtable (name, date) values ('$nomeFile','$data');"
 		let NRFile=NRFile-1
 	done
+		mysql --user=root -se "use ASF; SELECT * from ASFtable"
 }
 
 case $1 in
