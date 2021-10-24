@@ -2,7 +2,28 @@
 
 #1.0a
 
+
+
 if [[ $(eval "whoami") == "root" ]]; then
+
+prog(){
+	until [[ -d $(eval "echo $dirfrom") ]]; do
+		echo "Cartella da controllare: (inserire il percorso assoluto senza spazi)"
+		read dirfrom
+		if [[ -d $(eval "echo $dirfrom") ]]; then
+			echo "OK"
+		else
+			echo "DIR NON ESISTENTE"
+		fi
+	done
+	NRFile=$(ls $(eval "echo $dirfrom") | wc -l)
+	while [[ $NRFile > 0 ]]; do
+		cd $(eval "echo $dirfrom")
+		echo -ne "\e[96m$NRFile\033[0K\r"
+		nomeFile=$(ls -1 $(eval "echo $dirfrom") | tail -$NRFile | head -n1 | awk {'print $1'})
+		data=$(stat $(eval "echo $dirfrom")/$nomeFile | tail -3 | head -n1) | cut -d ':' -f 2
+	done
+}
 
 case $1 in
 	"-U" | "--update" )
@@ -42,11 +63,16 @@ case $1 in
 		fi
 	;;
 	"-S" | "--sort" )
+		echo "starting..."
+		prog
 	;;
 	"-R" | "--remove" )
 		rm /usr/bin/ASF.sh &
+		#
 	;;
 	"-V" | "--version" )
+		echo "ver: 1.0a"
+		#
 	;;
 	"-H" | "--help" )
 		echo "-S or --sort for sort files"
@@ -62,6 +88,7 @@ case $1 in
 		exit
 	;;
 esac
+
 else 
 	echo "please use sudo"
 fi
