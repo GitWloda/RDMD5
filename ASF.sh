@@ -4,6 +4,8 @@
 
 
 
+IFS=$'\n'
+
 if [[ $(eval "whoami") == "root" ]]; then
 
 prog(){
@@ -21,7 +23,6 @@ prog(){
 	while [[ $NRFile > 0 ]]; do
 		cd $(eval "echo $dirfrom")
 		echo -ne "\e[96m$NRFile\033[0K\r"
-		IFS=$'\n'
 		nomeFile=$(ls -1 $(eval "echo $dirfrom") | tail -$NRFile | head -n1)
 		data=$(stat $(eval "echo $dirfrom")/$nomeFile | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
 		echo $nomeFile
