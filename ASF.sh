@@ -17,6 +17,7 @@ prog(){
 		fi
 	done
 	NRFile=$(ls $(eval "echo $dirfrom") | wc -l)
+	echo $dirfrom
 	while [[ $NRFile > 0 ]]; do
 		cd $(eval "echo $dirfrom")
 		echo -ne "\e[96m$NRFile\033[0K\r"
