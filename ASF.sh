@@ -28,7 +28,7 @@ prog(){
 		mysql --user=root -se "create database if not exists ASF;
 		use ASF;
 		create table if not exists ASFtable
-		(id INT(6) UNSIGNED AUTO_INCREMENT P    RIMARY KEY, name varchar, date DATE);
+		(id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, name varchar, date DATE);
 		insert into ASFtable (name, date) values ('$nomeFile','$data');"
 		let NRFile=NRFile-1
 	done
