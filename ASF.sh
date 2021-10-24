@@ -24,6 +24,7 @@ prog(){
 		data=$(stat $(eval "echo $dirfrom")/$nomeFile | tail -3 | head -n1) | cut -d ':' -f 2
 		echo $nomeFile
 		echo $data
+		let NRFile=NRFile-1
 	done
 }
 
