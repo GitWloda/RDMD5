@@ -29,11 +29,7 @@ prog(){
 		echo -ne "\e[96m$NRFile\033[0K\r"
 		nomeFile=$(find $(eval "echo $dirfrom") -type f | tail -$NRFile | head -n1)
 		data=$(stat $(eval "echo $nomeFile") | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
-		if [[ $(md5sum $nomeFile | awk {'print $1'}) ]]; then
-			codMD5=$(md5sum $nomeFile | awk {'print $1'})
-		else
-			codMD5="DIR"
-		fi
+		codMD5=$(md5sum $nomeFile | awk {'print $1'})
 		mysql --user=root -se "use ASF;
 		insert into ASFtable (name, date, checksum) values ('$nomeFile','$data','$codMD5');"
 		let NRFile=NRFile-1
