@@ -34,7 +34,7 @@ prog(){
 		insert into ASFtable (name, date, checksum) values ('$nomeFile','$data','$codMD5');"
 		let NRFile=NRFile-1
 	done
-		mysql --user=root -se "use ASF; SELECT * from ASFtable"
+		mysql --user=root -se "use ASF; SELECT * count(*) as checksum from ASFtable"
 }
 
 case $1 in
