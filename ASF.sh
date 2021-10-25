@@ -31,7 +31,7 @@ prog(){
 		data=$(stat $(eval "echo $nomeFile") | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
 		codMD5=$(md5sum $nomeFile | awk {'print $1'})
 		mysql --user=root -se "use ASF;
-		insert into ASFtable (name, date, checksum) values ('$dirfrom','$data','$codMD5');"
+		insert into ASFtable (name, date, checksum) values ('$nomeFile','$data','$codMD5');"
 		let NRFile=NRFile-1
 	done
 		mysql --user=root -se "use ASF; SELECT * from ASFtable where checksum in (
