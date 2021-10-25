@@ -30,7 +30,9 @@ prog(){
 		nomeFile=$(ls -1 $(eval "echo $dirfrom") | tail -$NRFile | head -n1)
 		data=$(stat $(eval "echo $dirfrom")/$nomeFile | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
 		codMD5=$(md5sum $nomeFile | awk {'print $1'})
-		if [[ codMD5=="" ]]; then
+		if [[ md5sum $nomeFile | awk {'print $1'} ]]; then
+			codMD5=$(md5sum $nomeFile | awk {'print $1'})
+		else
 			codMD5="DIR"
 		fi
 		mysql --user=root -se "use ASF;
