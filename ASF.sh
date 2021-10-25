@@ -23,7 +23,7 @@ prog(){
 	mysql --user=root -se "drop database if exists ASF;
 		create database ASF;
 		use ASF;
-		create table ASFtable (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, name varchar(128), date DATE, checksum varchar(32) DEFAULT "DIR" );"
+		create table ASFtable (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, name varchar(128), date DATE, checksum varchar(32) DEFAULT \"DIR\" );"
 	while [[ $NRFile > 0 ]]; do
 		cd $(eval "echo $dirfrom")
 		echo -ne "\e[96m$NRFile\033[0K\r"
