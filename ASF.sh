@@ -28,7 +28,7 @@ prog(){
 		cd $(eval "echo $dirfrom")
 		echo -ne "\e[96m$NRFile\033[0K\r"
 		nomeFile=$(find $(eval "echo $dirfrom") -type f | tail -$NRFile | head -n1)
-		data=$(stat $(eval "echo $dirfrom")/$nomeFile | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
+		data=$(stat $(eval "echo $nomeFile") | tail -3 | head -n1 | cut -d ':' -f 2 | awk {'print $1'})
 		if [[ $(md5sum $nomeFile | awk {'print $1'}) ]]; then
 			codMD5=$(md5sum $nomeFile | awk {'print $1'})
 		else
