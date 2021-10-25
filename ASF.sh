@@ -20,7 +20,7 @@ prog(){
 	done
 	NRFile=$(ls $(eval "echo $dirfrom") | wc -l)
 	echo $dirfrom
-	mysql --user=root -se "create database if not exists ASF else drop database ASF;
+	mysql --user=root -se "drop database if exists ASF;
 		create database ASF;
 		create table ASFtable (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, name varchar(128), date DATE);"
 	while [[ $NRFile > 0 ]]; do
