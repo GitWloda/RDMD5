@@ -34,7 +34,8 @@ prog(){
 		insert into ASFtable (name, date, checksum) values ('$nomeFile','$data','$codMD5');"
 		let NRFile=NRFile-1
 	done
-		mysql --user=root -se "use ASF; SELECT * count(*) as CountOf from ASFtable having count(*)>1"
+		mysql --user=root -se "use ASF; SELECT * from ASFtable where checksum in (
+		SELECT checksum from ASFtable GROUP BY checksum  HAVING COUNT(*) > 1);"
 }
 
 case $1 in
